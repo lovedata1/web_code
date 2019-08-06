@@ -1,0 +1,515 @@
+HTML
+<nav id="navbar">
+  <header>SQL Documentation</header>
+  <ul>
+    <li><a class="nav-link" href="#Introduction">Introduction</a></li>
+    <li>
+      <a class="nav-link" href="#What_you_should_already_know"
+        >Getting Started</a
+      >
+    </li>
+    <li>
+      <a class="nav-link" href="#JavaScript_and_Java">What's New</a>
+    </li>
+    <li><a class="nav-link" href="#Hello_world">Release Notes</a></li>
+    <li><a class="nav-link" href="#Variables">Install</a></li>
+    <li>
+      <a class="nav-link" href="#Declaring_variables">Migrate</a>
+    </li>
+    <li><a class="nav-link" href="#Variable_scope">Business Continuity</a></li>
+    <li><a class="nav-link" href="#Global_variables">Security</a></li>
+    <li><a class="nav-link" href="#Constants">Manage and Monitor</a></li>
+    <li><a class="nav-link" href="#Data_types">Tune</a></li>
+    <li>
+      <a class="nav-link" href="#if...else_statement">Load and Move Data</a>
+    </li>
+    <li><a class="nav-link" href="#while_statement">Database Design</a></li>
+    <li>
+      <a class="nav-link" href="#Function_declarations"
+        >Query Data</a
+      >
+    </li>
+    <li><a class="nav-link" href="#Reference">Reference</a></li>
+  </ul>
+</nav>
+<main id="main-doc">
+  <section class="main-section" id="Introduction">
+    <header>Introduction</header>
+    <article>
+      <p>
+       Connect to a SQL Server instance. Start SQL Server Management Studio. The first time you run SSMS, the Connect to Server window opens. If it doesn't open, you can open it manually by selecting Object Explorer > Connect > Database Engine.
+      </p>
+      <code> USE master
+GO
+IF NOT EXISTS (
+   SELECT name
+   FROM sys.databases
+   WHERE name = N'TutorialDB'
+)
+CREATE DATABASE [TutorialDB]
+        GO</code>
+
+      <p>
+        In the Connect to Server window, follow the list below:
+
+    For Server type, select Database Engine (usually the default option).
+
+    For Server name, enter the name of your SQL Server instance. (This article uses the instance name SQL2016ST on the hostname NODE5 [NODE5\SQL2016ST].) If you're unsure how to determine your SQL Server instance name, see Additional tips and tricks for using SSMS.
+
+    For Authentication, select Windows Authentication. This article uses Windows Authentication, but SQL Server login is also supported. If you select SQL Login, you're prompted for a username and password. For more information about authentication types, see Connect to the server (database engine).
+You can also modify additional connection options by selecting Options. Examples of connection options are the database you're connecting to, the connection timeout value, and the network protocol. This article uses the default values for all the options.
+
+After you've completed all the fields, select Connect.
+
+      </p>
+      <ul>
+        <li>
+          To verify that your SQL Server connection succeeded, expand and explore the objects within Object Explorer. These objects are different depending on the type of server you choose to connect.</li>
+        <li>
+          In this tutorial, you previously used Windows Authentication to connect to your on-premises SQL server, but this method is not supported for SQL Azure DB. As such, this image shows using SQL Authentication to connect to the SQL Azure DB. For more information, see SQL on-premises authentication and SQL Azure authentication.
+        </li>
+      </ul>
+    </article>
+  </section>
+  <section class="main-section" id="What_you_should_already_know">
+    <header>Getting Started</header>
+    <article>
+      <p>Create a database named TutorialDB by following the below steps:
+
+    Right-click your server instance in Object Explorer, and then select New Query:</p>
+    <code>-- Create a new table called 'Customers' in schema 'dbo'
+-- Drop the table if it already exists
+IF OBJECT_ID('dbo.Customers', 'U') IS NOT NULL
+DROP TABLE dbo.Customers
+GO
+-- Create the table in the specified schema
+CREATE TABLE dbo.Customers
+(
+   CustomerId        INT    NOT NULL   PRIMARY KEY, -- primary key column
+   Name      [NVARCHAR](50)  NOT NULL,
+   Location  [NVARCHAR](50)  NOT NULL,
+   Email     [NVARCHAR](50)  NOT NULL
+);
+      GO</code>
+      <ul>
+        <li>
+          Into the query window, paste the following T-SQL code snippet:
+          <code>-- Insert rows into table 'Customers'
+INSERT INTO dbo.Customers
+   ([CustomerId],[Name],[Location],[Email])
+VALUES
+   ( 1, N'Orlando', N'Australia', N''),
+   ( 2, N'Keith', N'India', N'keith0@adventure-works.com'),
+   ( 3, N'Donna', N'Germany', N'donna0@adventure-works.com'),
+   ( 4, N'Janet', N'United States', N'janet1@adventure-works.com')
+            GO,</code>
+        </li>
+        <code>-- Select rows from table 'Customers'
+SELECT * FROM dbo.Customers;
+        </code>
+        <li>To execute the query, select Execute (or select F5 on your keyboard).</li>
+        <li>
+          After the query is complete, the new TutorialDB database appears in the list of databases in Object Explorer. If it isn't displayed, right-click the Databases node, and then select Refresh.
+        </li>
+      </ul>
+    </article>
+  </section>
+  <section class="main-section" id="JavaScript_and_Java">
+    <header>What's New</header>
+    <article>
+      <p>
+      Community technology preview (CTP) 3.2 is the latest public release of SQL Server 2019 preview. This release includes improvements from previous CTP releases to fix bugs, improve security, and optimize performance. For a list of features introduced or improved in each of the CTP releases before SQL Server 2019 preview CTP 3.2, see SQL Server 2019 preview CTP announcement archive.
+
+      </p>
+
+      <p>
+        Prior to CTP 3.2, SQL Server big data cluster was available to registered early adopters. This release allows anyone to experience the features of SQL Server Big data clusters.
+
+      </p>
+      <p>
+       Prior to CTP 3.2, SQL Server big data cluster was available to registered early adopters. This release allows anyone to experience the features of SQL Server Big data clusters.
+
+      </p>
+    </article>
+  </section>
+  <section class="main-section" id="Hello_world">
+    <header>Release Notes</header>
+    <article>
+      As new features are being rolled out to all regions, check the version deployed to your instance and the latest Azure SQL DW release notes for the feature availability. To check your Azure SQL DW version, connect to your data warehouse via SQL Server Management Studio (SSMS) and run SELECT @@VERSION AS 'SQL Data Warehouse'; to return the current version of Azure SQL DW.
+      <p>A Materialized View persists the data returned from the view definition query and automatically gets updated as data changes in the underlying tables. It improves the performance of complex queries (typically queries with joins and aggregations) while offering simple maintenance operations. For more information, see:
+- CREATE MATERIALIZED VIEW AS SELECT (Transact-SQL)
+- ALTER MATERIALIZED VIEW (Transact-SQL)
+        - T-SQL statements supported in Azure SQL Data Warehouse</p>
+    <code>CREATE PROCEDURE Sales.SampleProc --Outline region 1  
+AS  
+BEGIN --Outline region 2   
+  SELECT GETDATE() AS TimeOfQuery;  
+  SELECT * --Outline region 3  
+  FROM sys.transmission_queue;  
+  SELECT @@VERSION;  
+END;  
+GO  
+      </code>
+     
+    </article>
+  </section>
+  
+  <section class="main-section" id="Declaring_variables">
+    <header>Install</header>
+    <article>
+     Installation details
+
+    Options: Install through the Installation Wizard, a command prompt, or through sysprep
+
+    Requirements: Before you install, take some time to review installation requirements, system configuration checks, and security considerations in Planning a SQL Server Installation
+
+    Process: See Installation for SQL Server for complete instructions on the installation process
+
+    Sample databases and sample code:
+        They are not installed as part of SQL Server setup by default
+        To install them for non-Express editions of SQL Server, see the GitHub
+
+      <p>
+       Get the installation media
+
+The download location for SQL Server depends on the edition:
+
+    SQL Server Enterprise, Standard, and Express Editions are licensed for production use. For the Enterprise and Standard Editions, contact your software vendor for the installation media. You can find purchasing information and a directory of Microsoft partners on the Microsoft purchasing website.
+    Free editions are available at SQL Server downloads.
+
+      </p>
+      <p>
+        Review this article to install SQL Server on Windows Server Core.
+      </p>
+      <p>
+       Discusses the function of the System Configuration Checker (SCC).
+      </p>
+    </article>
+  </section>
+  <section class="main-section" id="Variable_scope">
+    <header>Migrate</header>
+    <article>
+      <p>
+       Azure Database Migration Service is a fully managed service designed to enable seamless migrations from multiple database sources to Azure data platforms with minimal downtime (online migrations).
+      </p>
+
+      <p>
+        fake news
+      </p>
+     Migrate databases to Azure with familiar tools
+
+Azure Database Migration Service integrates some of the functionality of our existing tools and services. It provides customers with a comprehensive, highly available solution. The service uses the Data Migration Assistant to generate assessment reports that provide recommendations to guide you through the changes required prior to performing a migration. It's up to you to perform any remediation required. When you're ready to begin the migration process, Azure Database Migration Service performs all of the required steps. You can fire and forget your migration projects with peace of mind, knowing that the process takes advantage of best practices as determined by Microsoft.
+
+
+      <p>
+        Using Azure Database Migration Service to perform an online migration requires creating an instance based on the Premium pricing tier.
+      </p>
+
+      
+    </article>
+  </section>
+  <section class="main-section" id="Global_variables">
+    <header>Business Continuity</header>
+    <article>
+      <p>
+        This topic introduces the Always On availability groups concepts that are central for configuring and managing one or more availability groups in SQL Server 2017. For a summary of the benefits offered by availability groups and an overview of Always On availability groups terminology, see Always On Availability Groups (SQL Server).
+      </p>
+
+      <p>
+        An availability group supports a replicated environment for a discrete set of user databases, known as availability databases. You can create an availability group for high availability (HA) or for read-scale. An HA availability group is a group of databases that fail over together. A read-scale availability group is a group of databases that are copied to other instances of SQL Server for read-only workload. An availability group supports one set of primary databases and one to eight sets of corresponding secondary databases. Secondary databases are not backups. Continue to back up your databases and their transaction logs on a regular basis.
+      </p>
+    </article>
+  </section>
+  <section class="main-section" id="Constants">
+    <header>Security</header>
+    <article>
+      <p>
+       Always Encrypted is a feature designed to protect sensitive data, such as credit card numbers or national identification numbers (for example, U.S. social security numbers), stored in Azure SQL Database or SQL Server databases. Always Encrypted allows clients to encrypt sensitive data inside client applications and never reveal the encryption keys to the Database Engine ( SQL Database or SQL Server). As a result, Always Encrypted provides a separation between those who own the data (and can view it) and those who manage the data (but should have no access). By ensuring on-premises database administrators, cloud database operators, or other high-privileged, but unauthorized users, cannot access the encrypted data, Always Encrypted enables customers to confidently store sensitive data outside of their direct control. This allows organizations to encrypt data at rest and in use for storage in Azure, to enable delegation of on-premises database administration to third parties, or to reduce security clearance requirements for their own DBA staff.
+
+
+      </p>
+
+      
+      <p>
+       Always Encrypted makes encryption transparent to applications. An Always Encrypted-enabled driver installed on the client computer achieves this by automatically encrypting and decrypting sensitive data in the client application. The driver encrypts the data in sensitive columns before passing the data to the Database Engine, and automatically rewrites queries so that the semantics to the application are preserved. Similarly, the driver transparently decrypts data, stored in encrypted database columns, contained in query results.
+      </p>
+
+      <p>
+       Always Encrypted is available in SQL Server 2016 (13.x) and SQL Database. (Prior to SQL Server 2016 (13.x) SP1, Always Encrypted was limited to the Enterprise Edition.) For a Channel 9 presentation that includes Always Encrypted, see Keeping Sensitive Data Secure with Always Encrypted.
+      </p>
+
+      <p>
+       Client and Data On-Premises
+
+A customer has a client application and SQL Server both running on-premises, at their business location. The customer wants to hire an external vendor to administer SQL Server. In order to protect sensitive data stored in SQL Server, the customer uses Always Encrypted to ensure the separation of duties between database administrators and application administrators. The customer stores plaintext values of Always Encrypted keys in a trusted key store which the client application can access. SQL Server administrators have no access to the keys and, therefore, are unable to decrypt sensitive data stored in SQL Server.
+      </p>
+
+     
+      
+    </article>
+  </section>
+  <section class="main-section" id="Data_types">
+    <header>Manage & Monitor</header>
+    <article>
+      <p>Maintenance plans create a workflow of the tasks required to make sure that your database is optimized, regularly backed up, and free of inconsistencies. The Maintenance Plan Wizard also creates core maintenance plans, but creating plans manually gives you much more flexibility.</p>
+      <ul>
+        <li>
+          <p>In SQL Server 2017 Database Engine, maintenance plans create an Integration Services package, which is run by a SQL Server Agent job. Maintenance plans can be run manually or automatically at scheduled intervals.</p>
+          <ul>
+            <li>Workflow creation using a variety of typical maintenance tasks. You can also create your own custom Transact-SQL scripts.</li>
+            <li>
+              Conceptual hierarchies. Each plan lets you create or edit task workflows. Tasks in each plan can be grouped into subplans, which can be scheduled to run at different times.
+            </li>
+            <li>Support for multiserver plans that can be used in master server/target server environments.
+
+</li>
+            <li>Support for logging plan history to remote servers.</li>
+            <li>Support for Windows Authentication and SQL Server Authentication. When possible, use Windows authentication.</li>
+            
+         
+      </ul>
+      Maintenance plans can be created to perform the following tasks:
+
+    Reorganize the data on the data and index pages by rebuilding indexes with a new fill factor. Rebuilding indexes with a new fill factor makes sure that database pages contain an equally distributed amount of data and free space. It also enables faster growth in the future. For more information, see Specify Fill Factor for an Index.
+
+    Compress data files by removing empty database pages.
+
+    Update index statistics to make sure the query optimizer has current information about the distribution of data values in the tables. This enables the query optimizer to make better judgments about the best way to access data, because it has more information about the data stored in the database. Although index statistics are automatically updated by SQL Server periodically, this option can force the statistics to update immediately.
+
+    Perform internal consistency checks of the data and data pages within the database to make sure that a system or software problem has not damaged data.
+
+    Back up the database and transaction log files. Database and log backups can be retained for a specified period. This lets you create a history of backups to be used if you have to restore the database to a time earlier than the last database backup. You can also perform differential backups.
+
+    Run SQL Server Agent jobs. This can be used to create jobs that perform a variety of actions and the maintenance plans to run those jobs.
+
+The results generated by the maintenance tasks can be written as a report to a text file or to the maintenance plan tables (sysmaintplan_log and sysmaintplan_logdetail) in msdb. To view the results in the log file viewer, right-click Maintenance Plans, and then click View History.
+
+    </article>
+  </section>
+  <section class="main-section" id="if...else_statement">
+    <header>Tune</header>
+    <article>
+      Automatic tuning is a database feature that provides insight into potential query performance problems, recommend solutions, and automatically fix identified problems.
+      <p>
+       Automatic tuning in SQL Server 2017 (14.x) notifies you whenever a potential performance issue is detected, and lets you apply corrective actions, or lets the Database Engine automatically fix performance problems. Automatic tuning in SQL Server 2017 (14.x) enables you to identify and fix performance issues caused by query execution plan choice regressions. Automatic tuning in Azure SQL Database also creates necessary indexes and drops unused indexes. For more information on query execution plans, see Execution Plans.
+      </p>
+      
+    
+    </article>
+  </section>
+  <section class="main-section" id="while_statement">
+    <header>Load & Move Data</header>
+    <article>
+      sThe bulk copy program utility (bcp) bulk copies data between an instance of Microsoft SQL Server and a data file in a user-specified format. The bcp utility can be used to import large numbers of new rows into SQL Server tables or to export data out of tables into data files. Except when used with the queryout option, the utility requires no knowledge of Transact-SQL. To import data into a table, you must either use a format file created for that table or understand the structure of the table and the types of data that are valid for its columns.
+
+      
+      </p>
+
+      <p>
+       The command line tools are General Availability (GA), however they are being released with the installer package for SQL Server 2019 preview.
+      </p>
+
+      
+
+      <p>The new version of SQLCMD supports Azure AD authentication, including Multi-Factor Authentication (MFA) support for SQL Database, SQL Data Warehouse, and Always Encrypted features. The new BCP supports Azure AD authentication, including Multi-Factor Authentication (MFA) support for SQL Database and SQL Data Warehouse.</p>
+
+      
+      <p>
+        Arguments
+      </p>
+
+      <ul>
+        <li>data_file
+Is the full path of the data file. When data is bulk imported into SQL Server, the data file contains the data to be copied into the specified table or view. When data is bulk exported from SQL Server, the data file contains the data copied from the table or view. The path can have from 1 through 255 characters. The data file can contain a maximum of 2^63 - 1 rows.</li>
+        <li>database_name
+Is the name of the database in which the specified table or view resides. If not specified, this is the default database for the user.
+
+You can also explicitly specify the database name with d-.</li>
+        <li>in data_file | out data_file | queryout data_file | format nul</li>
+      </ul>
+      <p>
+        owner
+Is the name of the owner of the table or view. owner is optional if the user performing the operation owns the specified table or view. If owner is not specified and the user performing the operation does not own the specified table or view, SQL Server returns an error message, and the operation is canceled.
+      </p>
+    </article>
+  </section>
+  <section class="main-section" id="Function_declarations">
+    <header>Database Design
+
+</header>
+    <article>
+      A database in SQL Server is made up of a collection of tables that stores a specific set of structured data. A table contains a collection of rows, also referred to as records or tuples, and columns, also referred to as attributes. Each column in the table is designed to store a certain type of information, for example, dates, names, dollar amounts, and numbers.
+
+      <ul>
+        <li>A computer can have one or more than one instance of SQL Server installed. Each instance of SQL Server can contain one or many databases. </li>
+        <li>
+          Within a database, there are one or many object ownership groups called schemas. 
+        </li>
+        <li>
+          Within each schema there are database objects such as tables, views, and stored procedures. 
+        </li>
+      </ul>
+      <p>
+        SQL Server databases are stored in the file system in files. Files can be grouped into filegroups. For more information about files and filegroups, see Database Files and Filegroups.
+
+
+      </p>
+
+      When people gain access to an instance of SQL Server they are identified as a login. When people gain access to a database they are identified as a database user. A database user can be based on a login. If contained databases are enabled, a database user can be created that is not based on a login. For more information about users, see CREATE USER (Transact-SQL).
+      <p>
+        A user that has access to a database can be given permission to access the objects in the database. Though permissions can be granted to individual users, we recommend creating database roles, adding the database users to the roles, and then grant access permission to the roles. Granting permissions to roles instead of users makes it easier to keep permissions consistent and understandable as the number of users grow and continually change. For more information about roles permissions, see CREATE ROLE (Transact-SQL) and Principals (Database Engine).
+      </p>
+      
+    </article>
+  </section>
+  <section class="main-section" id="Reference">
+    <header>Reference</header>
+    <article>
+      <ul>
+        <li>
+          All the documentation in this page is taken from
+          <a
+            href="https://docs.microsoft.com/en-us/sql/?view=sql-server-2017"
+            target="_blank"
+            >SQL</a
+          >
+        </li>
+      </ul>
+    </article>
+  </section>
+</main>
+
+
+CSS
+
+@import url('https://fonts.googleapis.com/css?family=Orbitron');
+
+
+html,
+body {
+  min-width: 290px;
+  color: teal;
+  background-color: teal;
+  font-family: "Orbitron", sans-serif;
+  line-height: 1.5;
+}
+
+#navbar {
+  position: fixed;
+  min-width: 290px;
+  top: 0px;
+  left: 0px;
+  width: 300px;
+  height: 100%;
+  border-right: solid;
+  border-color: rgba(0, 22, 22, 0.4);
+}
+
+header {
+  color: black;
+  margin: 10px;
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: thin;
+}
+
+#main-doc header {
+  text-align: left;
+  margin: 0px;
+}
+
+#navbar ul {
+  height: 88%;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#navbar li {
+  color: black;
+  border-top: 1px solid;
+  list-style: none;
+  position: relative;
+  width: 100%;
+}
+
+#navbar a {
+  display: block;
+  padding: 10px 30px;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#main-doc {
+  position: absolute;
+  margin-left: 310px;
+  padding: 20px;
+  margin-bottom: 110px;
+}
+
+section article {
+  color: yellow;
+  margin: 15px;
+  font-size: 0.96em;
+}
+
+section li {
+  margin: 15px 0px 0px 20px;
+}
+code {
+  display: block;
+  text-align: left;
+  white-space: pre;
+  position: relative;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 2;
+  background-color: teal;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+@media only screen and (max-width: 815px) {
+  /* For mobile phones: */
+  #navbar ul {
+    border: 1px solid;
+    height: 207px;
+  }
+
+  #navbar {
+    background-color: yellow;
+    position: absolute;
+    top: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-height: 275px;
+    border: none;
+    z-index: 1;
+    border-bottom: 2px solid;
+  }
+
+  #main-doc {
+    position: relative;
+    margin-left: 0px;
+    margin-top: 270px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  #main-doc {
+    margin-left: -10px;
+  }
+  code {
+    margin-left: -20px;
+    width: 100%;
+    padding: 15px;
+    padding-left: 10px;
+    padding-right: 45px;
+    min-width: 233px;
+  }  
+}
+
+
